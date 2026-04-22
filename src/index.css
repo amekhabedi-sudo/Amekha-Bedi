@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-sans: "Helvetica Neue", Arial, sans-serif;
+  
+  --color-bg-primary: #F9F9F7;
+  --color-bg-secondary: #F1F3F5;
+  --color-navy-deep: #0B1F3A;
+  --color-steel-blue: #5A6C7D;
+  --color-powder-blue: #A7C7E7;
+  --color-slate-dark: #2F3E46;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bg-primary text-slate-dark font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4 {
+    @apply font-serif text-navy-deep;
+  }
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.hairline {
+  @apply border-t-[0.5px] border-steel-blue/30;
+}
+
+.nav-link {
+  @apply text-[11px] uppercase tracking-[0.1em] font-semibold text-navy-deep hover:text-steel-blue transition-colors duration-300;
+}
+
+.overlay {
+  @apply absolute inset-0 bg-navy-deep/80 flex flex-col justify-center items-center opacity-0 transition-opacity duration-300 text-white p-4 text-center;
+}
+
+.gallery-item:hover .overlay {
+  @apply opacity-100;
+}
+
+.staggered-grid-item:nth-child(even) {
+  @apply md:mt-8;
+}
