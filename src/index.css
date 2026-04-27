@@ -27,12 +27,6 @@
   }
 }
 
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
-}
-
 .hairline {
   @apply border-t-[0.5px] border-steel-blue/30;
 }
@@ -47,8 +41,4 @@
 
 .gallery-item:hover .overlay {
   @apply opacity-100;
-}
-
-.staggered-grid-item:nth-child(even) {
-  @apply md:mt-8;
 }

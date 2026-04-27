@@ -5,7 +5,7 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Linkedin, ArrowRight, Menu, X, ArrowUpRight } from 'lucide-react';
+import { Linkedin, ArrowRight, Menu, X, ArrowUpRight, Play } from 'lucide-react';
 import { PORTFOLIO_ITEMS } from './constants';
 import { PortfolioItem } from './types';
 
@@ -17,7 +17,7 @@ export default function App() {
 
   const filteredItems = useMemo(() => 
     activeCategory === 'All' 
-      ? PORTFOLIO_ITEMS 
+      ? PORTFOLIO_ITEMS.filter(item => !item.excludeFromAll)
       : PORTFOLIO_ITEMS.filter(item => item.category === activeCategory)
   , [activeCategory]);
 
@@ -39,7 +39,7 @@ export default function App() {
           <div className="hidden md:flex items-center space-x-10">
             <a href="#works" className="nav-link">Works</a>
             <a href="#about" className="nav-link">About</a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="nav-link">
+            <a href="https://www.linkedin.com/in/amekha-bedi-7ab9943b5/" target="_blank" rel="noopener noreferrer" className="nav-link">
               LinkedIn
             </a>
             <a 
@@ -66,7 +66,7 @@ export default function App() {
             >
               <a href="#works" onClick={toggleMenu} className="text-2xl font-serif text-navy-deep font-bold">Works</a>
               <a href="#about" onClick={toggleMenu} className="text-2xl font-serif text-navy-deep font-bold">About</a>
-              <a href="https://linkedin.com" onClick={toggleMenu} className="text-2xl font-serif text-navy-deep font-bold">
+              <a href="https://www.linkedin.com/in/amekha-bedi-7ab9943b5/" onClick={toggleMenu} className="text-2xl font-serif text-navy-deep font-bold">
                 LinkedIn
               </a>
               <a 
@@ -144,23 +144,27 @@ export default function App() {
             </div>
           </div>
 
-          <div className="w-full md:w-7/12 grid grid-cols-2 gap-4">
+          <div className="w-full md:w-7/12 columns-2 gap-4 space-y-4">
             {PORTFOLIO_ITEMS.slice(0, 4).map((item, index) => (
               <motion.div 
                 key={item.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
-                className={`gallery-item relative aspect-[4/5] bg-bg-secondary overflow-hidden group ${index % 2 !== 0 ? 'md:mt-8' : ''}`}
+                onClick={() => item.videoUrl && window.open(item.videoUrl, '_blank')}
+                className={`gallery-item relative bg-bg-secondary overflow-hidden group break-inside-avoid ${item.videoUrl ? 'cursor-pointer' : ''}`}
               >
                 <img 
                   src={item.imageUrl} 
-                  alt={item.title} 
-                  className="w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-110"
+                  alt={item.altText || item.title} 
+                  className={`w-full h-auto object-contain transition-transform duration-700 group-hover:scale-110 ${item.category.includes('AI') ? '' : 'grayscale'}`}
                 />
                 <div className="overlay">
                   <span className="font-serif text-lg mb-1">{item.title}</span>
                   <span className="text-[10px] uppercase tracking-widest font-bold">{item.category}</span>
+                  {item.videoUrl && (
+                    <Play className="mt-2 w-5 h-5 text-white fill-current" />
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -182,10 +186,12 @@ export default function App() {
               className="space-y-8"
             >
               <p className="text-2xl md:text-3xl font-serif text-navy-deep leading-snug">
-                “I’m a visually driven and passionate design student who loves finding creative outlets for my thoughts. I enjoy capturing fleeting moments that might otherwise go unnoticed—whether through drawings, photographs, or paintings.”
+                I’m someone who naturally notices the little things like light hitting a wall a certain way, expressions that last only a second, moments most people move past. I’ve always felt the need to hold onto those details, and design became the way I do that.
               </p>
               <p className="text-lg text-slate-dark/80 leading-loose">
-                This portfolio contains a collection of artwork done by me, offering a glimpse into the way I see and document the world around me. Based in Manipal, my work is inspired by the interplay of light, texture, and emotion in everyday life.
+                I want to work across different mediums drawing, photography, and AI, depending on what feels right for the idea. Some things are easier to sketch, some are better captured as they are, and some need to be built from scratch. I like experimenting and figuring out what works rather than sticking to one style.
+                <br /><br />
+                This portfolio contains a collection of artwork done by me, offering a glimpse into the way I see and document the world around me.
               </p>
             </motion.div>
           </div>
@@ -224,7 +230,7 @@ export default function App() {
 
           <motion.div 
             layout
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
           >
             <AnimatePresence mode="popLayout">
               {filteredItems.map((item) => (
@@ -234,16 +240,22 @@ export default function App() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="gallery-item staggered-grid-item relative aspect-[4/5] bg-bg-secondary overflow-hidden group"
+                  onClick={() => item.videoUrl && window.open(item.videoUrl, '_blank')}
+                  className={`gallery-item relative bg-bg-secondary overflow-hidden group break-inside-avoid ${item.videoUrl ? 'cursor-pointer' : ''}`}
                 >
                   <img 
                     src={item.imageUrl} 
-                    alt={item.title} 
-                    className="w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-110"
+                    alt={item.altText || item.title} 
+                    className={`w-full h-auto object-contain transition-transform duration-700 group-hover:scale-110 ${item.category.includes('AI') ? '' : 'grayscale'}`}
                   />
                   <div className="overlay">
                     <span className="font-serif text-xl mb-1">{item.title}</span>
                     <span className="text-[10px] uppercase tracking-widest font-bold">{item.category}</span>
+                    {item.videoUrl && (
+                      <div className="mt-4 flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm group-hover:scale-110 transition-transform">
+                        <Play className="w-6 h-6 text-white fill-current" />
+                      </div>
+                    )}
                     <p className="mt-4 text-xs italic opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">{item.caption}</p>
                   </div>
                 </motion.div>
@@ -271,7 +283,7 @@ export default function App() {
       <footer className="h-16 px-6 md:px-12 flex justify-between items-center hairline bg-bg-primary">
         <div className="text-[10px] text-steel-blue uppercase tracking-widest font-bold">Open to collaborations, projects & visual storytelling</div>
         <div className="flex gap-6 items-center">
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-xs text-navy-deep font-bold hover:text-steel-blue transition-colors uppercase tracking-widest">
+          <a href="https://www.linkedin.com/in/amekha-bedi-7ab9943b5/" target="_blank" rel="noopener noreferrer" className="text-xs text-navy-deep font-bold hover:text-steel-blue transition-colors uppercase tracking-widest">
             LinkedIn
           </a>
           <span className="text-[10px] text-steel-blue italic font-serif tracking-wider">
